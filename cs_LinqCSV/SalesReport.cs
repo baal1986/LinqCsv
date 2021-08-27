@@ -21,7 +21,7 @@ namespace cs_LinqCSV {
         public void Generate() {
             ReadCSVFile();
             Parse();
-            PrintResult();
+            WriteCSVFile();
         }
         //***********************************************************************************
         public List<Table> ReadCSVFile() {
@@ -61,7 +61,6 @@ namespace cs_LinqCSV {
                 string year = itm.Key1;
                 string month = itm.Key2;
 
-                //Console.WriteLine("{0} {1} ", itm.Key1, itm.Key2);
 
                 var groupM = itm.Result.GroupBy(x => x.manager).
                                    Select(x => new {
@@ -69,18 +68,10 @@ namespace cs_LinqCSV {
                                        amount = x.Sum(z => Convert.ToDouble(z.orderTotal))
                                    }).ToList();
 
-                /*foreach (var itm2 in groupM) {
-                    Console.WriteLine($"{itm2.name} - {itm2.amount}");
-                }*/
-
                 var min = groupM.Select(x => x.amount).Min();
-                //Console.WriteLine($"min: {min} \n");
-
                 var max = groupM.Select(x => x.amount).Max();
-                //Console.WriteLine($"max: {max} \n");
-
                 var total = groupM.Select(x => x.amount).Sum();
-                //Console.WriteLine($"  total: {total} ");
+
 
                 var bestManager = groupM.Where(x => x.amount.Equals(max)).ToList();
                 var loserManager = groupM.Where(x => x.amount.Equals(min)).ToList();
@@ -103,8 +94,8 @@ namespace cs_LinqCSV {
 
 
                 resultTable.Add(new ResultTable(year, month, total,
-                                                bestManagerNames, bestManagerAmount,
-                                                loserManagerNames, loserManagerAmount)
+                                                bestManagerNames[0], bestManagerAmount[0],
+                                                loserManagerNames[0], loserManagerAmount[0])
                 );
             }
 
@@ -112,15 +103,19 @@ namespace cs_LinqCSV {
         }
         //***********************************************************************************
         void PrintResult() {
-            foreach (var item in resultTable) {
-                Console.WriteLine($"{item.year} {item.month} {item.earnings} {item.bestManager} {item.earningsBestManager} {item.loserManager} {item.earningsLoserManager}");
+            var resultTableSort = resultTable.OrderBy(x => x.year).ThenBy(x => x.month);
+            foreach (var item in resultTableSort) {
+                Console.WriteLine($"{item.year}\t{item.month}\t{item.earnings}\t" +
+                    $"{item.bestManager[0]}\t\t {item.earningsBestManager}\t\t" +
+                    $"{item.loserManager[0]}\t\t{item.earningsLoserManager}");
             }
         }
         //***********************************************************************************
         public void WriteCSVFile() {
+        
             using (var writer = new StreamWriter(fileNameOutput))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture)) {
-                csv.WriteRecords(resultTable);
+                 csv.WriteRecords(resultTable);
             }
         }
         //***********************************************************************************

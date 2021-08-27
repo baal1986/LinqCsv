@@ -39,30 +39,31 @@ namespace cs_LinqCSV {
     public class ResultTable {
 
 
-        public ResultTable(string year, string month, double earnings, 
-            List<string> bestManager, List<double> earningsBestManager,
-            List<string> loserManager, List<double> earningsLoserManager) {
+        public ResultTable(string year, string month, double earnings,
+            string bestManager, double earningsBestManager,
+            string loserManager, double earningsLoserManager) {
 
             this.year = year;
             this.month = month;
             this.earnings = earnings;
 
-            this.bestManager = new List<string>();
+           
             this.bestManager = bestManager;
 
-            this.earningsBestManager = new List<double>();
+          
             this.earningsBestManager = earningsBestManager;
 
-            this.loserManager = new List<string>();
+           
             this.loserManager = loserManager;
 
-            this.earningsLoserManager = new List<double>();
+            
             this.earningsLoserManager = earningsLoserManager;
 
 
         }
 
         [Name("Год")]
+
         public string year { get; set; }
 
         [Name("Месяц")]
@@ -72,16 +73,16 @@ namespace cs_LinqCSV {
         public double earnings { get; set; }
 
         [Name("Лучший продавец")]
-        public List<string> bestManager { get; set; }
+        public string bestManager { get; set; }
 
         [Name("Выручка лучшего продавца")]
-        public List<double> earningsBestManager { get; set; }
+        public double earningsBestManager { get; set; }
 
         [Name("Худший продавец")]
-        public List<string> loserManager { get; set; }
+        public string loserManager { get; set; }
 
         [Name("Выручка худшего продавца")]
-        public List<double> earningsLoserManager { get; set; }
+        public double earningsLoserManager { get; set; }
 
     }
 }
