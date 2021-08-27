@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "BKO+P4S/QvIpdtxdV1EHb7uiR49vJV49IttH1kej452i09E52KLfBThsIgB+Alme7D5f7cHLKbfKM4KPb9TYFA==",
+  "success": true,
+  "projectFilePath": "D:\\PROJECTS\\cs_LinqCSV\\cs_LinqCSV\\cs_LinqCSV.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\albah\\.nuget\\packages\\csvhelper\\27.1.1\\csvhelper.27.1.1.nupkg.sha512",
+    "C:\\Users\\albah\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512"
+  ],
+  "logs": []
+}
