@@ -14,11 +14,14 @@ namespace cs_LinqCSV {
             this.fileNameInput = fileNameInput;
             this.fileNameOutput = fileNameOutput;
 
-            table = new List<Table>();
+            this.table = new List<Table>();
+            this.resultTable = new List<ResultTable>();
         }
         //***********************************************************************************
         public void Generate() {
             ReadCSVFile();
+            Parse();
+            PrintResult();
         }
         //***********************************************************************************
         public List<Table> ReadCSVFile() {
@@ -58,41 +61,60 @@ namespace cs_LinqCSV {
                 string year = itm.Key1;
                 string month = itm.Key2;
 
-                Console.WriteLine("{0} {1} ", itm.Key1, itm.Key2);
- 
+                //Console.WriteLine("{0} {1} ", itm.Key1, itm.Key2);
+
                 var groupM = itm.Result.GroupBy(x => x.manager).
                                    Select(x => new {
                                        name = x.Key,
                                        amount = x.Sum(z => Convert.ToDouble(z.orderTotal))
                                    }).ToList();
 
-                foreach (var itm2 in groupM) {
+                /*foreach (var itm2 in groupM) {
                     Console.WriteLine($"{itm2.name} - {itm2.amount}");
-                }
+                }*/
 
-                var min = groupM.Select(x => x.amount).Min() ;
+                var min = groupM.Select(x => x.amount).Min();
                 //Console.WriteLine($"min: {min} \n");
 
                 var max = groupM.Select(x => x.amount).Max();
                 //Console.WriteLine($"max: {max} \n");
 
                 var total = groupM.Select(x => x.amount).Sum();
-                Console.WriteLine($"  total: {total} ");
+                //Console.WriteLine($"  total: {total} ");
 
-                var bestManager = groupM.Where(x=>x.amount.Equals(max)).ToList();
-                foreach (var item2 in bestManager) {
-                    Console.WriteLine($"  best manager: {item2.name} {item2.amount}");
-                }
-
-
+                var bestManager = groupM.Where(x => x.amount.Equals(max)).ToList();
                 var loserManager = groupM.Where(x => x.amount.Equals(min)).ToList();
-                foreach (var item3 in loserManager) {
-                    Console.WriteLine($"  loser manager: {item3.name} {item3.amount}");
+
+                List<string> bestManagerNames = new List<string>();
+                List<double> bestManagerAmount = new List<double>();
+                foreach (var item2 in bestManager) {
+                    bestManagerNames.Add(item2.name);
+                    bestManagerAmount.Add(item2.amount);
+                    //Console.WriteLine($"  best manager: {item2.name} {item2.amount}");
                 }
 
+                List<string> loserManagerNames = new List<string>();
+                List<double> loserManagerAmount = new List<double>();
+                foreach (var item3 in loserManager) {
+                    loserManagerNames.Add(item3.name);
+                    loserManagerAmount.Add(item3.amount);
+                    //Console.WriteLine($"  loser manager: {item3.name} {item3.amount}");
+                }
+
+
+                resultTable.Add(new ResultTable(year, month, total,
+                                                bestManagerNames, bestManagerAmount,
+                                                loserManagerNames, loserManagerAmount)
+                );
             }
 
 
+        }
+        //***********************************************************************************
+        void PrintResult() {
+            foreach (var item in resultTable) {
+                Console.WriteLine($"{item.year} {item.month} {item.earnings} {item.bestManager} {item.earningsBestManager} {item.loserManager} {item.earningsLoserManager}");
+            }
         }
         //***********************************************************************************
         public void WriteCSVFile() {
